@@ -31,6 +31,12 @@ def track_and_redirect():
     except Exception as e:
         print("Error during logging:", e)
 
+    import os
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
     return redirect(REDIRECT_URL)
 
 if __name__ == '__main__':
