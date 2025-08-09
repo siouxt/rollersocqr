@@ -7,7 +7,7 @@ app = Flask(__name__)
 GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
 
 # Destination URL to redirect after logging the scan
-REDIRECT_URL = 'https://example.com'  # change this
+REDIRECT_URL = 'https://su.sheffield.ac.uk/activities/view/roller-skate-society'  # change this
 
 @app.route('/')
 def track_and_redirect():
