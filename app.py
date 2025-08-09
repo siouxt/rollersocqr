@@ -1,13 +1,14 @@
 from flask import Flask, request, redirect
 import requests
+import os
 
 app = Flask(__name__)
 
-# Replace this with your actual Google Apps Script webhook URL
-GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
+# 🔁 Replace with your actual Google Apps Script webhook URL
+GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw99sNRC-tYiOkRgydziz3sgq0sCeSd_vIsrsAVtINzzrBSTjjhE-8YLVWYQu__op4c/exec'
 
-# Destination URL to redirect after logging the scan
-REDIRECT_URL = 'https://su.sheffield.ac.uk/activities/view/roller-skate-society'  # change this
+# 🔁 Replace with your actual destination URL
+REDIRECT_URL = 'https://su.sheffield.ac.uk/activities/view/roller-skate-society'
 
 @app.route('/')
 def track_and_redirect():
@@ -20,24 +21,19 @@ def track_and_redirect():
             'ip': ip,
             'user_agent': user_agent,
             'referrer': referrer,
-            'location': ''  # Optional — can be extended with geo API
+            'location': ''
         }
 
-        # Post to Google Apps Script
-        response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload)
-        if response.status_code != 200:
-            print("Google Sheets webhook error:", response.text)
+        # Send the data to your Google Sheet via Apps Script
+        requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload, timeout=2)
 
     except Exception as e:
-        print("Error during logging:", e)
+        print(f"Error logging to Google Sheet: {e}")
 
-    import os
+    # Redirect the user to the final URL
+    return redirect(REDIRECT_URL, code=302)
 
+# 👇 This makes the app work properly on Render
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
-    return redirect(REDIRECT_URL)
-
-if __name__ == '__main__':
-    app.run(debug=True)
